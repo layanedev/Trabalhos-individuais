@@ -1,0 +1,928 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>raiz. — caderno de pesquisa ENEM</title>
+<style>
+:root{
+  --bg:#eaf4ee; --bg-alt:#d5e8dc; --paper:#fdfbf7; --paper2:#f4f9f5;
+  --ink:#3b4a40; --brown:#3b4a40; --muted:#7f9183;
+  --line:#c8ded1; --sage:#8fb096; --sage2:#a8c9b0; --rose:#e5a9a5; --gold:#e8c37a;
+  --shadow:0 2px 8px rgba(94,122,104,.08); --shadow-hover:0 4px 12px rgba(94,122,104,.14);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:'Nunito','Trebuchet MS',system-ui,sans-serif;
+  background-image:radial-gradient(rgba(143,176,150,.15) 1px,transparent 1px); background-size:24px 24px;
+}
+button,textarea,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+
+/* ---------- APP SHELL ---------- */
+.app{max-width:1240px;margin:auto;padding:20px;display:grid;grid-template-columns:200px 1fr;gap:20px;min-height:100vh}
+
+/* ---------- TOPBAR ILUSTRADA ---------- */
+.topbar{
+  grid-column:1/-1; height:120px; border-radius:20px; position:relative; overflow:hidden;
+  background:linear-gradient(180deg,#d5e8dc 0%,#eaf4ee 100%);
+  border:1px solid var(--line); margin-bottom:6px; box-shadow:var(--shadow);
+}
+
+/* ---------- SIDEBAR ---------- */
+aside{background:var(--bg-alt);border-radius:20px;padding:18px 12px;display:flex;flex-direction:column;border:1px solid var(--line);box-shadow:var(--shadow)}
+.logo{font:800 26px 'Nunito',sans-serif;color:var(--brown);letter-spacing:-1px;padding:0 8px;line-height:1;display:flex;align-items:center;gap:8px}
+.logo small{display:block;font:9px system-ui;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px;font-weight:700}
+nav{display:grid;gap:4px;margin-top:22px}
+nav button{border:0;background:transparent;text-align:left;border-radius:10px;padding:9px 11px;color:#5a6b5f;font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px;transition:all .15s ease}
+nav button .ic{font-size:14px;opacity:.7;width:16px;text-align:center}
+nav button.active,nav button:hover{background:var(--paper);color:var(--ink);box-shadow:var(--shadow)}
+nav button.active{font-weight:800}
+.aside-note{margin-top:auto;padding:16px 8px 4px;font-size:10px;line-height:1.6;color:var(--muted);border-top:1px dashed var(--line)}
+.aside-note b{color:var(--ink);display:block;margin-bottom:4px;font-size:9px;letter-spacing:1px;text-transform:uppercase}
+.countdown{margin-top:14px;background:var(--paper);border-radius:10px;padding:10px;font-size:10px;line-height:1.4;border:1px solid var(--line);text-align:center}
+.countdown b{display:block;font:800 18px 'Nunito',sans-serif;color:var(--brown)}
+.countdown small{color:var(--muted);font-size:9px;letter-spacing:.5px;text-transform:uppercase;font-weight:700}
+
+/* ---------- MAIN ---------- */
+main{min-width:0;padding:4px 0}
+.top{display:flex;align-items:flex-end;justify-content:space-between;margin:4px 4px 20px;gap:12px;flex-wrap:wrap}
+.eyebrow{font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--muted);margin-bottom:6px;font-weight:800}
+h1{font:700 clamp(24px,2.8vw,30px) 'Nunito',sans-serif;margin:0;letter-spacing:-.5px;color:var(--ink)}
+h2{font-size:13px;margin:0;font-weight:800;color:var(--ink)}
+h3{font-size:12px;margin:0 0 6px;font-weight:700;color:var(--muted)}
+.pill{border-radius:20px;padding:7px 12px;background:var(--paper);color:var(--ink);font-size:10px;font-weight:700;border:1px solid var(--line);box-shadow:var(--shadow)}
+
+.grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,.65fr);gap:16px}
+.stack{display:grid;gap:16px;align-content:start}
+
+/* ---------- CARDS ---------- */
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0;box-shadow:var(--shadow);transition:box-shadow .2s}
+.card:hover{box-shadow:var(--shadow-hover)}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.card-head span{font-size:10px;color:var(--muted);font-weight:600}
+.card-head .tag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;background:var(--bg-alt);padding:3px 7px;border-radius:6px;color:var(--sage);font-weight:700}
+
+/* ---------- HERO ---------- */
+.hero{background:linear-gradient(135deg,#d5e8dc,#c2dccf);border-color:#b5d2c3;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:160px;height:160px;border:1px solid var(--sage2);border-radius:50%;right:-40px;top:-50px;box-shadow:0 0 0 22px rgba(168,201,176,.2),0 0 0 44px rgba(168,201,176,.12)}
+.hero h1{color:#2f3d35;font-size:clamp(22px,2.6vw,26px);line-height:1.2}
+.hero p{font-size:12.5px;line-height:1.65;color:#4a5c50;max-width:480px;position:relative;z-index:1;margin:10px 0 14px}
+.hero button{position:relative;z-index:1}
+.hero .quote{font-style:italic;font-size:11.5px;color:#5a6b5f;border-left:2px solid var(--sage);padding-left:10px;margin:12px 0 0;max-width:440px;position:relative;z-index:1}
+
+/* ---------- BUTTONS ---------- */
+.primary,.secondary,.ghost{border:0;border-radius:10px;padding:9px 14px;font-size:11.5px;font-weight:700;transition:all .15s}
+.primary{background:#7ba88a;color:#fff;box-shadow:0 2px 4px rgba(94,122,104,.2)}
+.primary:hover{background:#6a977a;transform:translateY(-1px)}
+.secondary{background:var(--bg-alt);color:var(--ink);border:1px solid var(--line)}
+.secondary:hover{background:var(--sage2)}
+.ghost{background:transparent;color:var(--sage);border:1px dashed var(--line)}
+.ghost:hover{background:var(--paper2)}
+
+/* ---------- INPUTS ---------- */
+textarea,input,select{width:100%;border:1px solid var(--line);border-radius:10px;background:var(--paper2);color:var(--ink);padding:10px 11px;line-height:1.55;font-size:12.5px;transition:border-color .15s}
+textarea:focus,input:focus,select:focus{outline:none;border-color:var(--sage);box-shadow:0 0 0 3px rgba(143,176,150,.15)}
+label{font-size:11px;color:var(--muted);display:block;margin-bottom:5px;font-weight:700}
+.field{margin-bottom:10px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+
+/* ---------- STATUS ---------- */
+.status{font-size:11px;color:var(--muted);margin-top:9px;line-height:1.55;min-height:15px}
+.notice{background:var(--paper2);color:var(--muted);border-radius:10px;padding:10px 12px;font-size:11px;line-height:1.6;margin-top:11px;border-left:3px solid var(--sage)}
+.notice b{color:var(--ink)}
+
+/* ---------- POINTS ---------- */
+.points{background:linear-gradient(135deg,#7ba88a,#6a977a);color:#fff;border:0}
+.points .card-head span{color:rgba(255,255,255,.75)}
+.points h2{color:#fff}
+.big-num{font:800 42px 'Nunito',sans-serif;margin:4px 0;letter-spacing:-1.5px;line-height:1}
+.points .sub{color:rgba(255,255,255,.8);font-size:10.5px}
+.points .streak{margin-top:10px;padding-top:10px;border-top:1px dashed rgba(255,255,255,.3);font-size:11px;color:rgba(255,255,255,.9)}
+.points .streak b{color:#fff;font-size:14px}
+
+/* ---------- VILLAGE ---------- */
+.village-scene{background:linear-gradient(180deg,#d5e8dc 0%,#eaf4ee 66%,#b8d4c2 66%,#a8c9b0 100%);border-radius:14px;min-height:180px;position:relative;overflow:hidden;border:1px solid var(--line)}
+.village-scene:before{content:"";position:absolute;width:240px;height:130px;left:-35px;bottom:30px;background:#a8c9b0;border-radius:50% 50% 0 0;opacity:.7}
+.village-scene:after{content:"";position:absolute;width:250px;height:120px;right:-50px;bottom:26px;background:#8fb096;border-radius:50% 50% 0 0;opacity:.8}
+.village-sun{position:absolute;right:22px;top:18px;width:26px;height:26px;border-radius:50%;background:#f4d58d;box-shadow:0 0 0 8px rgba(244,213,141,.2)}
+.village-cloud{position:absolute;top:29px;left:22px;width:46px;height:13px;border-radius:20px;background:#fff;opacity:.85}
+.village-cloud:before,.village-cloud:after{content:"";position:absolute;bottom:2px;background:#fff;border-radius:50%}
+.village-cloud:before{width:16px;height:16px;left:8px}.village-cloud:after{width:20px;height:20px;left:20px}
+.village-path{position:absolute;z-index:1;bottom:-28px;left:36%;width:38%;height:80px;background:#e6ddc9;transform:rotate(-12deg);border-radius:50%}
+.village-house{position:absolute;z-index:3;left:50%;bottom:37px;width:74px;height:55px;transform:translateX(-50%);transition:all .5s}
+.house-roof{position:absolute;left:-8px;top:-23px;width:0;height:0;border-left:45px solid transparent;border-right:45px solid transparent;border-bottom:34px solid #a0785c}
+.house-body{position:absolute;inset:9px 0 0;background:#f5ecd9;border:2px solid #c8b8a4;border-radius:4px 4px 3px 3px}
+.house-door{position:absolute;bottom:0;left:28px;width:18px;height:29px;background:#8a6a52;border-radius:7px 7px 0 0;border:2px solid #7a5c46}
+.house-window{position:absolute;top:17px;left:7px;width:15px;height:14px;background:#b8d4e0;border:2px solid #c8b8a4;border-radius:3px}
+.house-window.right{left:auto;right:7px}
+.village-tree{position:absolute;z-index:3;bottom:38px;left:16%;width:26px;height:44px;transition:all .5s}
+.tree-trunk{position:absolute;bottom:0;left:10px;width:6px;height:20px;background:#8a6a52;border-radius:4px}
+.tree-crown{position:absolute;bottom:13px;left:0;width:26px;height:27px;border-radius:50% 50% 44% 48%;background:#8fb096;box-shadow:7px 4px 0 #a8c9b0,-5px 7px 0 #7a9d84}
+.village-flower{position:absolute;z-index:3;bottom:37px;left:39%;font-size:14px;color:var(--rose);opacity:0;transform:scale(.4);transition:all .5s}
+.village-car{position:absolute;z-index:4;right:10%;bottom:37px;width:44px;height:19px;border-radius:9px 12px 5px 5px;background:#7ba88a;opacity:0;transform:translateY(10px);transition:all .5s}
+.village-car:before{content:"";position:absolute;left:9px;top:-9px;width:22px;height:13px;border-radius:8px 8px 0 0;background:#7ba88a}
+.village-car:after{content:"";position:absolute;left:12px;top:-6px;width:16px;height:8px;border-radius:4px 4px 0 0;background:#d5e8dc}
+.car-wheel{position:absolute;bottom:-5px;left:7px;width:9px;height:9px;border-radius:50%;background:#4a5c50;box-shadow:21px 0 #4a5c50}
+.village-scene.level-garden .village-flower{opacity:1;transform:scale(1)}
+.village-scene.level-car .village-car,.village-scene.level-full .village-car{opacity:1;transform:translateY(0)}
+.village-scene.level-full .village-house{transform:translateX(-50%) scale(1.1)}
+.village-scene.level-full .village-tree{transform:scale(1.15);transform-origin:bottom}
+.village-scene.level-full .village-flower{left:41%}
+.village-ground-label{position:absolute;z-index:5;bottom:7px;left:0;right:0;text-align:center;font-size:8.5px;letter-spacing:1.2px;text-transform:uppercase;color:#4a5c50;font-weight:700}
+.scene-caption{font-size:10.5px;color:var(--muted);text-align:center;margin-top:9px;line-height:1.5}
+
+/* ---------- STATS ---------- */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px}
+.stat{background:var(--bg-alt);border-radius:10px;padding:9px 11px;border:1px solid var(--line)}
+.stat span{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.stat strong{display:block;font:800 20px 'Nunito',sans-serif;color:var(--ink);margin-top:3px;letter-spacing:-.5px}
+
+/* ---------- TIMER ---------- */
+.timer-face{width:min(100%,200px);aspect-ratio:1;border-radius:50%;margin:4px auto 10px;display:grid;place-items:center;position:relative;background:conic-gradient(#7ba88a var(--angle,0deg),#d5e8dc var(--angle,0deg))}
+.timer-face:before{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--paper)}
+.timer-inner{position:relative;text-align:center}
+.timer-time{font:800 38px 'Nunito',sans-serif;letter-spacing:-1.5px;color:var(--ink)}
+.timer-caption{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:4px;font-weight:700}
+.presets,.timer-actions{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-top:9px}
+.preset{border:1px solid var(--line);background:var(--paper2);color:var(--ink);padding:6px 9px;border-radius:8px;font-size:10.5px;font-weight:700}
+.preset.active{background:#7ba88a;color:#fff;border-color:#7ba88a}
+
+/* ---------- ENTRIES ---------- */
+.entries{display:grid;gap:0;max-height:520px;overflow:auto}
+.entry{padding:11px 0;border-bottom:1px solid var(--bg-alt)}
+.entry:last-child{border:0}
+.entry-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:5px}
+.entry strong{font-size:11.5px;color:var(--ink)}
+.entry small{font-size:9.5px;color:var(--muted);white-space:nowrap}
+.entry p{font-size:11.5px;color:var(--muted);line-height:1.55;margin:0;white-space:pre-wrap}
+
+/* ---------- BARS ---------- */
+.bars{display:grid;gap:7px;margin-top:8px}
+.bar-row{display:grid;grid-template-columns:88px 1fr 44px;gap:8px;align-items:center;font-size:11px}
+.bar-row span:first-child{color:var(--muted);font-weight:600}
+.bar-track{background:var(--bg-alt);border-radius:6px;height:11px;overflow:hidden;border:1px solid var(--line)}
+.bar-fill{height:100%;background:linear-gradient(90deg,#a8c9b0,#7ba88a);border-radius:5px;transition:width .4s}
+.bar-row span:last-child{text-align:right;font-weight:800;color:var(--ink);font-size:10.5px}
+
+/* ---------- STREAK DOTS ---------- */
+.streak-dots{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+.dot{width:16px;height:16px;border-radius:5px;background:var(--paper2);border:1px solid var(--line);display:grid;place-items:center;font-size:8px;color:transparent}
+.dot.on{background:#7ba88a;color:#fff;border-color:#7ba88a}
+.dot.bad{background:var(--rose);color:#fff;border-color:#c88a86}
+
+/* ---------- COMPETENCY ---------- */
+.comp{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:4px}
+.comp-cell{background:var(--bg-alt);border-radius:8px;padding:7px 4px;text-align:center;border:1px solid var(--line)}
+.comp-cell small{display:block;font-size:8.5px;color:var(--muted);letter-spacing:.5px;font-weight:700}
+.comp-cell strong{font:800 15px 'Nunito',sans-serif;color:var(--ink);display:block;margin-top:2px}
+.comp-cell input{width:100%;border:0;background:transparent;text-align:center;font:800 15px 'Nunito',sans-serif;color:var(--ink);padding:0}
+.comp-cell input:focus{outline:none;background:var(--paper);border-radius:4px}
+
+/* ---------- OBS ---------- */
+.obs{background:var(--paper2);border-left:3px solid var(--sage);border-radius:0 10px 10px 0;padding:10px 12px;font-size:11.5px;line-height:1.6;margin-bottom:8px}
+.obs b{color:var(--sage);display:block;font-size:10px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px}
+
+/* ---------- VIEWS ---------- */
+.view{display:none}.view.active{display:block;animation:fade .3s}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.intro{margin:2px 4px 16px}
+.intro p{font-size:12.5px;color:var(--muted);line-height:1.6;max-width:640px}
+
+/* ---------- TABLE ---------- */
+.table{width:100%;border-collapse:collapse;font-size:11.5px}
+.table th{text-align:left;font-size:9.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);padding:5px 6px;border-bottom:2px solid var(--line)}
+.table td{padding:6px;border-bottom:1px solid var(--bg-alt)}
+.table td:last-child,.table th:last-child{text-align:right}
+.table tr:hover td{background:var(--paper2)}
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+@media(max-width:760px){
+  .app{grid-template-columns:1fr;padding:10px;gap:10px}
+  .topbar{height:90px}
+  aside{padding:12px;border-radius:16px}
+  .logo{font-size:22px}
+  nav{display:flex;overflow:auto;margin-top:10px;gap:4px}
+  nav button{white-space:nowrap;padding:7px 9px;font-size:11px}
+  .aside-note{display:none}
+  .countdown{margin-top:8px;padding:8px 10px}
+  .countdown b{font-size:16px}
+  .card{padding:13px}
+  .row,.row3{grid-template-columns:1fr}
+  .timer-face{width:170px}
+  .comp{grid-template-columns:repeat(5,1fr);gap:3px}
+  .comp-cell{padding:5px 2px}
+  .comp-cell small{font-size:7px}
+  .comp-cell input,.comp-cell strong{font-size:12px}
+  .bar-row{grid-template-columns:70px 1fr 36px;font-size:10px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ===== TOPBAR ILUSTRADA ===== -->
+<div class="topbar">
+  <!-- Nuvens -->
+  <div style="position:absolute;top:20px;left:15%;width:40px;height:12px;background:#fff;border-radius:20px;opacity:.9;"></div>
+  <div style="position:absolute;top:14px;left:16%;width:16px;height:16px;background:#fff;border-radius:50%;"></div>
+  <div style="position:absolute;top:35px;right:25%;width:50px;height:14px;background:#fff;border-radius:20px;opacity:.8;"></div>
+  <!-- Árvores -->
+  <div style="position:absolute;bottom:0;left:5%;width:40px;height:70px;background:#8fb096;border-radius:50% 50% 0 0;opacity:.8;"></div>
+  <div style="position:absolute;bottom:0;left:8%;width:30px;height:50px;background:#7a9d84;border-radius:50% 50% 0 0;opacity:.7;"></div>
+  <div style="position:absolute;bottom:0;right:8%;width:50px;height:80px;background:#8fb096;border-radius:50% 50% 0 0;opacity:.7;"></div>
+  <div style="position:absolute;bottom:0;right:12%;width:35px;height:60px;background:#a8c9b0;border-radius:50% 50% 0 0;opacity:.8;"></div>
+  <!-- Coelhinho -->
+  <div style="position:absolute;bottom:15px;left:50%;transform:translateX(-50%);font-size:40px;filter:drop-shadow(0 3px 2px rgba(0,0,0,.1));">🐰</div>
+  <!-- Frase -->
+  <div style="position:absolute;top:20px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;color:#4a5c50;letter-spacing:2px;text-transform:uppercase;white-space:nowrap;">continue estudando, continue sendo</div>
+</div>
+
+<aside>
+  <div class="logo">
+    <span style="font-size:24px;">🌱</span>
+    <div>raiz.<small>caderno de pesquisa enem</small></div>
+  </div>
+  <nav>
+    <button class="active" data-view="home"><span class="ic">⌂</span> Início</button>
+    <button data-view="diary"><span class="ic">✎</span> Diário</button>
+    <button data-view="focus"><span class="ic">◷</span> Foco</button>
+    <button data-view="redacao"><span class="ic">✦</span> Redações</button>
+    <button data-view="simulados"><span class="ic">◫</span> Simulados</button>
+    <button data-view="erros"><span class="ic">△</span> Banco de erros</button>
+    <button data-view="plano"><span class="ic">☰</span> Plano semanal</button>
+    <button data-view="obs"><span class="ic">◐</span> Observações</button>
+    <button data-view="reports"><span class="ic">≡</span> Relatórios</button>
+  </nav>
+  <div class="countdown" id="countdown">
+    <small>faltam</small>
+    <b id="daysLeft">—</b>
+    <small>dias para o ENEM</small>
+  </div>
+  <div class="aside-note">
+    <b>Princípio</b>
+    Você não quer só que funcione. Você quer que faça sentido.
+  </div>
+</aside>
+
+<main>
+<header class="top">
+  <div>
+    <div class="eyebrow" id="eyebrow">seu cantinho de pesquisa</div>
+    <h1 id="greeting">Oi. O que você quer entender hoje?</h1>
+  </div>
+  <span class="pill" id="datePill">—</span>
+</header>
+
+<!-- ================= HOME ================= -->
+<section class="view active" id="home">
+<div class="grid">
+ <div class="stack">
+  <article class="card hero">
+    <div class="eyebrow">um dia de cada vez</div>
+    <h1>Cuide de você.<br>Entenda o que funciona.</h1>
+    <p>Registre o que fez, o que sentiu e o que percebeu. O app não decide por você — ele guarda os dados para você enxergar padrões e questionar o próprio método.</p>
+    <button class="primary" onclick="show('diary')">Registrar o dia →</button>
+    <div class="quote">"Não quero só que as coisas funcionem. Quero que façam sentido pra mim."</div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><h2>Você foi às atividades?</h2><span class="tag" id="todayLabel">hoje</span></div>
+    <p class="status" style="margin-top:0">Escola, UP ENEM, curso. Registrar não é se cobrar — é coletar dado.</p>
+    <div class="choices" style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="secondary" onclick="attendance('Fui')">✓ Fui</button>
+      <button class="secondary" onclick="attendance('Falta justificada')">Falta justificada</button>
+      <button class="secondary" onclick="attendance('Faltei')">Faltei</button>
+      <button class="ghost" onclick="attendance('Dia ruim')">Dia ruim (sem culpa)</button>
+    </div>
+    <div class="status" id="attendanceStatus">Ainda não registrado hoje.</div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><h2>Seu ritmo nos últimos 7 dias</h2><span id="weekSummary">—</span></div>
+    <div class="streak-dots" id="weekDots"></div>
+    <div class="bars" id="weekBars"></div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><h2>Último resumo</h2><button class="secondary" onclick="show('reports')">Ver todos</button></div>
+    <div class="report" id="latestReport" style="font-size:11.5px;line-height:1.7;color:#5d4032;white-space:pre-wrap">Seu resumo vai aparecer aqui quando você escrever no diário.</div>
+  </article>
+ </div>
+
+ <div class="stack">
+  <article class="card points">
+    <div class="card-head"><h2>Meus pontos</h2><span>constância</span></div>
+    <div class="big-num" id="points">0</div>
+    <div class="sub">pontos disponíveis</div>
+    <div class="streak">🔥 streak: <b id="streakNum">0</b> dia(s) seguidos</div>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><h2>Minha vila</h2><span>cresce com você</span></div>
+    <div class="village-scene" id="homeVillage">
+      <span class="village-sun"></span><span class="village-cloud"></span><span class="village-path"></span>
+      <div class="village-tree"><span class="tree-crown"></span><span class="tree-trunk"></span></div>
+      <div class="village-house"><span class="house-roof"></span><span class="house-body"></span><span class="house-window"></span><span class="house-window right"></span><span class="house-door"></span></div>
+      <span class="village-flower">✿ ✿</span><div class="village-car"><span class="car-wheel"></span></div>
+      <span class="village-ground-label">sua pequena vila</span>
+    </div>
+    <div class="scene-caption" id="sceneCaption">Comece com 5 minutos. Sua vila cresce conforme você estuda.</div>
+    <button class="secondary" style="width:100%;margin-top:10px" onclick="show('focus')">Entrar no foco →</button>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><h2>Uma pergunta</h2></div>
+    <p class="status" id="mentor" style="margin-top:0;font-size:11.5px;line-height:1.65">O que você percebeu sobre seu estudo esta semana? Não precisa responder agora — mas observe.</p>
+  </article>
+ </div>
+</div>
+</section>
+
+<!-- ================= DIARY ================= -->
+<section class="view" id="diary">
+<div class="intro">
+  <div class="eyebrow">diário pessoal</div>
+  <h1>Me conta como foi.</h1>
+  <p>Escreva livremente: aulas, humor, energia, banho, cabelo, unhas, ou qualquer coisa. O resumo automático é um ponto de partida — o que importa é o que <b>você</b> conclui dele.</p>
+</div>
+<div class="grid">
+ <article class="card">
+   <label for="diaryText">Seu relato de hoje</label>
+   <textarea id="diaryText" rows="9" placeholder="Ex.: Hoje tive aula o dia todo, fiquei cansada, mas consegui revisar matemática por 40 min. Percebi que rendo mais de manhã..."></textarea>
+   <div class="row" style="margin-top:10px">
+     <div class="field"><label>Humor (1–5) — <span id="moodVal">3</span></label><input type="range" id="moodRange" min="1" max="5" value="3" oninput="document.getElementById('moodVal').textContent=this.value"></div>
+     <div class="field"><label>Energia (1–5) — <span id="energyVal">3</span></label><input type="range" id="energyRange" min="1" max="5" value="3" oninput="document.getElementById('energyVal').textContent=this.value"></div>
+   </div>
+   <div class="row">
+     <div class="field"><label>Horas de sono</label><input type="number" id="sleepInput" step="0.5" min="0" max="14" placeholder="7.5"></div>
+   </div>
+   <button class="primary" style="margin-top:6px" onclick="saveDiary()">Gerar resumo →</button>
+   <div class="notice">O resumo usa só o que você escreveu. Ele não julga aparência e não exige nenhum cuidado específico.</div>
+ </article>
+
+ <article class="card">
+   <div class="card-head"><h2>Seu resumo de hoje</h2><span id="reportDate">—</span></div>
+   <div class="report" id="reportOutput" style="font-size:11.5px;line-height:1.75;color:#5d4032;white-space:pre-wrap">Depois de salvar, seu resumo aparece aqui.</div>
+   <button class="secondary" style="margin-top:10px" onclick="copyReport()">Copiar</button>
+ </article>
+</div>
+</section>
+
+<!-- ================= FOCUS ================= -->
+<section class="view" id="focus">
+<div class="intro">
+  <div class="eyebrow">modo foco</div>
+  <h1>Estude. Sua casa cresce.</h1>
+  <p>A cada 5 minutos completos, 1 ponto. Escolha a matéria — os minutos ficam registrados por matéria para você ver onde seu tempo está indo.</p>
+</div>
+<div class="grid">
+ <article class="card">
+   <div class="field">
+     <label>Matéria desta sessão</label>
+     <select id="focusSubject">
+       <option>Linguagens</option><option>Humanas</option><option>Natureza</option><option>Matemática</option>
+       <option>Redação</option><option>Revisão</option><option>Outro</option>
+     </select>
+   </div>
+   <div class="timer-face" id="timerFace" style="--angle:0deg">
+     <div class="timer-inner">
+       <div class="timer-time" id="timerDisplay">25:00</div>
+       <div class="timer-caption" id="timerCaption">hora de florescer</div>
+     </div>
+   </div>
+   <div class="presets">
+     <button class="preset" data-min="15" onclick="choose(15)">15</button>
+     <button class="preset active" data-min="25" onclick="choose(25)">25</button>
+     <button class="preset" data-min="45" onclick="choose(45)">45</button>
+     <button class="preset" data-min="60" onclick="choose(60)">60</button>
+   </div>
+   <div class="timer-actions">
+     <button class="primary" id="startBtn" onclick="startFocus()">Começar foco</button>
+     <button class="secondary" onclick="resetFocus()">Reiniciar</button>
+   </div>
+   <div class="status" style="text-align:center" id="focusStatus">Escolha um tempo e comece.</div>
+ </article>
+
+ <article class="card">
+   <div class="card-head"><h2>Sua vila</h2><span>cada sessão deixa algo</span></div>
+   <div class="village-scene" id="focusVillage" style="min-height:200px">
+     <span class="village-sun"></span><span class="village-cloud"></span><span class="village-path"></span>
+     <div class="village-tree"><span class="tree-crown"></span><span class="tree-trunk"></span></div>
+     <div class="village-house"><span class="house-roof"></span><span class="house-body"></span><span class="house-window"></span><span class="house-window right"></span><span class="house-door"></span></div>
+     <span class="village-flower">✿ ✿</span><div class="village-car"><span class="car-wheel"></span></div>
+     <span class="village-ground-label">sua pequena vila</span>
+   </div>
+   <div class="scene-caption" id="focusSceneCaption">Sua casa espera o primeiro bloco.</div>
+   <div class="stats">
+     <div class="stat"><span>Minutos focados</span><strong id="minutes">0</strong></div>
+     <div class="stat"><span>Pontos do foco</span><strong id="focusPoints">0</strong></div>
+   </div>
+   <div class="notice">5 min: muda · 15: jardim · 25: casa · 45: carro · 60: vila. O progresso é acumulado.</div>
+ </article>
+</div>
+</section>
+
+<!-- ================= REDAÇÃO ================= -->
+<section class="view" id="redacao">
+<div class="intro">
+  <div class="eyebrow">redações</div>
+  <h1>O que você treinou.</h1>
+  <p>Registre tema, data e as 5 competências. No fim, o app calcula a média. O que importa não é a nota — é o padrão entre uma redação e outra.</p>
+</div>
+<div class="grid">
+ <article class="card">
+   <div class="card-head"><h2>Nova redação</h2><span class="tag">registro</span></div>
+   <div class="field"><label>Tema</label><input id="redTheme" placeholder="Ex.: Desafios da mobilidade urbana no Brasil"></div>
+   <div class="field"><label>Data</label><input type="date" id="redDate"></div>
+   <div class="comp">
+     <div class="comp-cell"><small>C1</small><input type="number" min="0" max="200" id="c1" placeholder="0"></div>
+     <div class="comp-cell"><small>C2</small><input type="number" min="0" max="200" id="c2" placeholder="0"></div>
+     <div class="comp-cell"><small>C3</small><input type="number" min="0" max="200" id="c3" placeholder="0"></div>
+     <div class="comp-cell"><small>C4</small><input type="number" min="0" max="200" id="c4" placeholder="0"></div>
+     <div class="comp-cell"><small>C5</small><input type="number" min="0" max="200" id="c5" placeholder="0"></div>
+   </div>
+   <div class="field" style="margin-top:10px"><label>Observação (o que você quer lembrar)</label><textarea id="redNote" rows="2" placeholder="Ex.: fui bem na tese, fraquei na proposta de intervenção"></textarea></div>
+   <button class="primary" onclick="saveRedacao()">Salvar redação →</button>
+   <div class="status" id="redStatus"></div>
+ </article>
+
+ <article class="card">
+   <div class="card-head"><h2>Suas redações</h2><span id="redCount">0</span></div>
+   <div class="entries" id="redList"><div class="status">Nenhuma ainda.</div></div>
+   <div class="stats" style="margin-top:10px">
+     <div class="stat"><span>Média geral</span><strong id="redAvg">—</strong></div>
+     <div class="stat"><span>Total</span><strong id="redTotal">0</strong></div>
+   </div>
+ </article>
+</div>
+</section>
+
+<!-- ================= SIMULADOS ================= -->
+<section class="view" id="simulados">
+<div class="intro">
+  <div class="eyebrow">simulados</div>
+  <h1>Onde você está, em números.</h1>
+  <p>Registre a nota de cada área. Compare com você mesma ao longo do tempo — não com os outros.</p>
+</div>
+<div class="grid">
+ <article class="card">
+   <div class="card-head"><h2>Novo simulado</h2><span class="tag">registro</span></div>
+   <div class="field"><label>Nome / prova</label><input id="simName" placeholder="Ex.: Simulado ENEM 2025 — 1º"></div>
+   <div class="field"><label>Data</label><input type="date" id="simDate"></div>
+   <div class="row">
+     <div class="field"><label>Linguagens</label><input type="number" id="sLing" min="0" max="1000" placeholder="0"></div>
+     <div class="field"><label>Humanas</label><input type="number" id="sHum" min="0" max="1000" placeholder="0"></div>
+   </div>
+   <div class="row">
+     <div class="field"><label>Natureza</label><input type="number" id="sNat" min="0" max="1000" placeholder="0"></div>
+     <div class="field"><label>Matemática</label><input type="number" id="sMat" min="0" max="1000" placeholder="0"></div>
+   </div>
+   <button class="primary" onclick="saveSimulado()">Salvar →</button>
+   <div class="status" id="simStatus"></div>
+ </article>
+ <article class="card">
+   <div class="card-head"><h2>Histórico</h2><span id="simCount">0</span></div>
+   <div class="entries" id="simList"><div class="status">Nenhum simulado ainda.</div></div>
+   <div class="bars" id="simBars" style="margin-top:10px"></div>
+ </article>
+</div>
+</section>
+
+<!-- ================= ERROS ================= -->
+<section class="view" id="erros">
+<div class="intro">
+  <div class="eyebrow">banco de erros</div>
+  <h1>O que você errou.</h1>
+  <p>Cada erro é uma pista sobre o que revisar. Registre e volte aqui antes da prova.</p>
+</div>
+<div class="grid">
+ <article class="card">
+   <div class="card-head"><h2>Novo erro</h2><span class="tag">revisão</span></div>
+   <div class="row">
+     <div class="field"><label>Matéria</label>
+       <select id="errSubject"><option>Linguagens</option><option>Humanas</option><option>Natureza</option><option>Matemática</option><option>Redação</option><option>Outro</option></select>
+     </div>
+     <div class="field"><label>Tópico</label><input id="errTopic" placeholder="Ex.: função quadrática"></div>
+   </div>
+   <div class="field"><label>O que eu errei / o que aprendi</label><textarea id="errNote" rows="3" placeholder="Ex.: confundi vértice com raiz. Preciso revisar a fórmula."></textarea></div>
+   <button class="primary" onclick="saveErro()">Salvar erro →</button>
+   <div class="status" id="errStatus"></div>
+ </article>
+ <article class="card">
+   <div class="card-head"><h2>Seus erros</h2><span id="errCount">0</span></div>
+   <div class="entries" id="errList"><div class="status">Nenhum erro registrado.</div></div>
+ </article>
+</div>
+</section>
+
+<!-- ================= PLANO ================= -->
+<section class="view" id="plano">
+<div class="intro">
+  <div class="eyebrow">plano semanal</div>
+  <h1>O que você decidiu.</h1>
+  <p>Escreva suas metas por dia. Não é para cumprir tudo — é para saber o que você pretendia e comparar com o que aconteceu.</p>
+</div>
+<article class="card">
+  <div class="card-head"><h2>Metas da semana</h2><span id="weekLabel">—</span></div>
+  <div id="planFields"></div>
+  <button class="primary" style="margin-top:8px" onclick="savePlan()">Salvar plano →</button>
+  <div class="status" id="planStatus"></div>
+</article>
+</section>
+
+<!-- ================= OBSERVAÇÕES ================= -->
+<section class="view" id="obs">
+<div class="intro">
+  <div class="eyebrow">observações</div>
+  <h1>Suas hipóteses.</h1>
+  <p>O que você suspeita sobre o próprio estudo? Anote aqui e volte depois para ver se os dados confirmam.</p>
+</div>
+<div class="grid">
+ <article class="card">
+   <div class="card-head"><h2>Nova observação</h2><span class="tag">hipótese</span></div>
+   <div class="field"><label>O que você percebeu / quer testar</label><textarea id="obsText" rows="3" placeholder="Ex.: acho que reviso melhor à noite. Testar por 1 semana."></textarea></div>
+   <button class="primary" onclick="saveObs()">Salvar →</button>
+   <div class="status" id="obsStatus"></div>
+ </article>
+ <article class="card">
+   <div class="card-head"><h2>Suas anotações</h2><span id="obsCount">0</span></div>
+   <div id="obsList"><div class="status">Nenhuma observação ainda.</div></div>
+ </article>
+</div>
+</section>
+
+<!-- ================= REPORTS ================= -->
+<section class="view" id="reports">
+<div class="intro">
+  <div class="eyebrow">relatórios</div>
+  <h1>Seus dados.</h1>
+  <p>Tudo o que você registrou, reunido. Exporte quando quiser.</p>
+</div>
+<article class="card">
+  <div class="card-head"><h2>Registros do diário</h2><span id="entryCount">0</span></div>
+  <div class="entries" id="entries"><div class="status">Quando você salvar um relato, ele aparece aqui.</div></div>
+</article>
+<article class="card" style="margin-top:13px">
+  <div class="card-head"><h2>Exportar</h2><span class="tag">backup</span></div>
+  <div class="choices" style="display:flex;gap:6px;flex-wrap:wrap">
+    <button class="secondary" onclick="exportJSON()">Baixar JSON</button>
+    <button class="secondary" onclick="exportText()">Baixar resumo.txt</button>
+    <button class="ghost" onclick="clearAll()">Apagar tudo</button>
+  </div>
+  <div class="status" id="exportStatus">Seus dados ficam no seu navegador. Se limpar o navegador, perde.</div>
+</article>
+</section>
+</main>
+</div>
+
+<script>
+/* ---------- storage ---------- */
+const KEY='raiz_v2';
+const defaultState={
+  points:10, lastAttendanceDate:'', totalFocusMinutes:0, totalFocusPoints:0,
+  focusBySubject:{}, entries:[], redacoes:[], simulados:[], erros:[], obs:[],
+  plan:{}, diaryMeta:{}, streak:0, lastStudyDate:'', villageLevelSeen:0, enemDate:'2026-11-08'
+};
+let S=load();
+function load(){try{const r=localStorage.getItem(KEY);return r?{...defaultState,...JSON.parse(r)}:structuredClone(defaultState)}catch(e){return structuredClone(defaultState)}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function resetAll(){S=structuredClone(defaultState);save();location.reload()}
+
+/* ---------- helpers ---------- */
+const day=()=>new Date().toLocaleDateString('pt-BR');
+const dateShort=()=>new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
+const safe=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function show(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>show(b.dataset.view));
+
+/* ---------- countdown ---------- */
+function renderCountdown(){
+  const enem=new Date(S.enemDate+'T00:00:00');
+  const diff=Math.ceil((enem-new Date())/86400000);
+  document.getElementById('daysLeft').textContent=diff>0?diff:'hoje';
+}
+renderCountdown();
+document.getElementById('datePill').textContent=dateShort();
+
+/* ---------- attendance ---------- */
+function attendance(type){
+  if(S.lastAttendanceDate===day()){document.getElementById('attendanceStatus').textContent='Você já registrou hoje. Um registro por dia basta.';return;}
+  S.lastAttendanceDate=day();
+  let delta=type==='Fui'?10:type==='Faltei'?-15:0;
+  S.points=Math.max(0,S.points+delta);
+  document.getElementById('points').textContent=S.points;
+  const msg={
+    'Fui':'Registrado: fui. +10.',
+    'Falta justificada':'Falta justificada. 0 pontos — sem culpa.',
+    'Faltei':'Faltei. -15. Olhe o motivo com honestidade e escolha o próximo passo.',
+    'Dia ruim':'Dia ruim registrado. Sem perder pontos. Isso também é dado.'
+  }[type];
+  document.getElementById('attendanceStatus').textContent=msg;
+  if(type==='Faltei')document.getElementById('mentor').textContent='Você faltou. O que aconteceu? Não é sobre julgamento — é sobre entender o padrão.';
+  else if(type==='Fui')document.getElementById('mentor').textContent='Você compareceu. O que funcionou hoje que você quer repetir?';
+  else if(type==='Dia ruim')document.getElementById('mentor').textContent='Dia ruim registrado sem punição. O que você precisa para amanhã ser diferente?';
+  else document.getElementById('mentor').textContent='Falta justificada. Cuide de você e retome quando puder.';
+  updateStreak(type==='Fui'||type==='Falta justificada');
+  save();renderAll();
+}
+function updateStreak(counted){
+  if(!counted)return;
+  const today=day();
+  if(S.lastStudyDate===today)return;
+  const y=new Date();y.setDate(y.getDate()-1);
+  const yStr=y.toLocaleDateString('pt-BR');
+  S.streak=(S.lastStudyDate===yStr)?S.streak+1:1;
+  S.lastStudyDate=today;
+  save();
+}
+
+/* ---------- diary ---------- */
+function saveDiary(){
+  const raw=document.getElementById('diaryText').value.trim();
+  if(!raw){alert('Escreva um pouquinho primeiro.');return;}
+  const mood=document.getElementById('moodRange').value;
+  const energy=document.getElementById('energyRange').value;
+  const sleep=document.getElementById('sleepInput').value;
+  const lower=raw.toLowerCase();
+  const lines=['Resumo: '+raw];
+  const groups=[
+    ['Estudos e rotina',['estud','aula','escola','enem','curso','prova','trabalho','lição','revis']],
+    ['Bem-estar',['cansad','sono','dormi','ansios','trist','feliz','estress','energia','humor','calma']],
+    ['Autocuidado',['banho','cabelo','pele','skincare','hidrata','unha','manicure','depila','desodorante','dente','escov','creme']],
+    ['Vida pessoal',['família','amig','namor','casa','ônibus','comi','almoç','jante','caminh']]
+  ];
+  for(const [name,words] of groups){
+    if(words.some(w=>lower.includes(w)))lines.push(name+': mencionado no relato. Vale ver como influenciou o dia.');
+  }
+  lines.push(`Humor: ${mood}/5 · Energia: ${energy}/5${sleep?` · Sono: ${sleep}h`:''}`);
+  lines.push('Pergunta pra você: o que disso você quer repetir amanhã?');
+  const report=lines.join('\n');
+  const entry={date:dateShort(),iso:new Date().toISOString(),report,mood:+mood,energy:+energy,sleep:sleep?+sleep:null,raw};
+  S.entries.unshift(entry);
+  S.diaryMeta[new Date().toISOString().slice(0,10)]={mood:+mood,energy:+energy,sleep:sleep?+sleep:null};
+  document.getElementById('reportOutput').textContent=report;
+  document.getElementById('reportDate').textContent=dateShort();
+  document.getElementById('latestReport').textContent=report.split('\n')[0];
+  document.getElementById('mentor').textContent='Você parou para olhar para o seu dia. O que os dados te dizem?';
+  updateStreak(true);
+  save();renderAll();
+}
+function copyReport(){
+  const t=document.getElementById('reportOutput').textContent;
+  if(!t||t.startsWith('Depois')){alert('Gere um resumo primeiro.');return;}
+  if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>alert('Copiado.')).catch(()=>alert(t));
+  else alert(t);
+}
+
+/* ---------- focus ---------- */
+let focusDuration=25*60, remaining=25*60, interval=null, running=false, endAt=0, awarded=0;
+function choose(m){
+  if(running)return;
+  focusDuration=m*60;remaining=focusDuration;awarded=0;
+  document.querySelectorAll('.preset').forEach(b=>b.classList.toggle('active',+b.dataset.min===m));
+  renderTimer();document.getElementById('focusStatus').textContent='Bloco de '+m+' min escolhido.';
+}
+function startFocus(){
+  if(running)return;
+  running=true;endAt=Date.now()+remaining*1000;
+  interval=setInterval(tick,250);
+  document.getElementById('startBtn').textContent='Pausar';
+  document.getElementById('startBtn').onclick=pauseFocus;
+  document.getElementById('timerCaption').textContent='crescendo com você';
+  document.getElementById('focusStatus').textContent='Foco ligado. Uma coisa de cada vez.';
+}
+function pauseFocus(){
+  if(!running)return;
+  remaining=Math.max(0,Math.ceil((endAt-Date.now())/1000));
+  running=false;clearInterval(interval);interval=null;
+  document.getElementById('startBtn').textContent='Continuar';
+  document.getElementById('startBtn').onclick=startFocus;
+  document.getElementById('focusStatus').textContent='Pausado. Continue quando fizer sentido.';
+  renderTimer();
+}
+function resetFocus(){
+  running=false;clearInterval(interval);interval=null;
+  remaining=focusDuration;awarded=0;
+  document.getElementById('startBtn').textContent='Começar foco';
+  document.getElementById('startBtn').onclick=startFocus;
+  document.getElementById('timerCaption').textContent='hora de florescer';
+  document.getElementById('focusStatus').textContent='Reiniciado. Os pontos já ganhos continuam.';
+  renderTimer();
+}
+function tick(){
+  remaining=Math.max(0,Math.ceil((endAt-Date.now())/1000));
+  const elapsed=focusDuration-remaining;
+  const newPoints=Math.floor(elapsed/300)-awarded;
+  if(newPoints>0){
+    S.points+=newPoints;S.totalFocusPoints+=newPoints;awarded+=newPoints;
+    const subj=document.getElementById('focusSubject').value;
+    S.focusBySubject[subj]=(S.focusBySubject[subj]||0)+newPoints*5;
+    document.getElementById('focusStatus').textContent='+'+newPoints+' ponto(s) em '+subj+'.';
+    save();
+  }
+  renderTimer();renderVillage();
+  if(remaining<=0){
+    running=false;clearInterval(interval);interval=null;
+    S.totalFocusMinutes+=Math.floor(focusDuration/60);
+    document.getElementById('startBtn').textContent='Novo bloco';
+    document.getElementById('startBtn').onclick=()=>{resetFocus();startFocus();};
+    document.getElementById('timerCaption').textContent='bloco concluído';
+    document.getElementById('focusStatus').textContent='Bloco concluído. Faça uma pausa.';
+    document.getElementById('mentor').textContent='Você investiu tempo. O que isso te diz sobre seu ritmo?';
+    updateStreak(true);
+    save();renderAll();
+  }
+}
+function renderTimer(){
+  const m=Math.floor(remaining/60),s=remaining%60;
+  document.getElementById('timerDisplay').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  const elapsed=focusDuration-remaining;
+  document.getElementById('timerFace').style.setProperty('--angle',(Math.max(0,Math.min(1,elapsed/focusDuration))*360)+'deg');
+  document.getElementById('minutes').textContent=S.totalFocusMinutes+(running?Math.floor(elapsed/60):0);
+  document.getElementById('focusPoints').textContent=S.totalFocusPoints;
+  renderVillage();
+}
+function renderVillage(){
+  const total=S.totalFocusMinutes+(running?Math.floor((focusDuration-remaining)/60):0);
+  const level=total>=60?'level-full':total>=45?'level-car':total>=15?'level-garden':'';
+  const caption=total>=60?'Sua vila floresceu por completo. Continue construindo.':total>=45?'O carro chegou. Novos caminhos.':total>=25?'A casa está pronta.':total>=15?'O jardim começou.':total>=5?'A árvore criou raízes.':'Comece com 5 minutos.';
+  for(const id of ['homeVillage','focusVillage']){
+    const el=document.getElementById(id);
+    if(el){el.classList.remove('level-garden','level-car','level-full');if(level)el.classList.add(level);}
+  }
+  document.getElementById('sceneCaption').textContent=caption;
+  document.getElementById('focusSceneCaption').textContent=caption;
+}
+
+/* ---------- redações ---------- */
+function saveRedacao(){
+  const theme=document.getElementById('redTheme').value.trim();
+  const date=document.getElementById('redDate').value||new Date().toISOString().slice(0,10);
+  const comps=['c1','c2','c3','c4','c5'].map(id=>+document.getElementById(id).value||0);
+  if(!theme){alert('Dê um tema à redação.');return;}
+  const total=comps.reduce((a,b)=>a+b,0);
+  const note=document.getElementById('redNote').value.trim();
+  S.redacoes.unshift({theme,date,comps,total,note});
+  ['redTheme','redNote'].forEach(id=>document.getElementById(id).value='');
+  ['c1','c2','c3','c4','c5'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('redStatus').textContent='Salva. Total: '+total+'/1000.';
+  save();renderRedacoes();
+}
+function renderRedacoes(){
+  const el=document.getElementById('redList');
+  document.getElementById('redCount').textContent=S.redacoes.length+' redação(ões)';
+  document.getElementById('redTotal').textContent=S.redacoes.length;
+  if(!S.redacoes.length){el.innerHTML='<div class="status">Nenhuma ainda.</div>';document.getElementById('redAvg').textContent='—';return;}
+  const avg=Math.round(S.redacoes.reduce((a,r)=>a+r.total,0)/S.redacoes.length);
+  document.getElementById('redAvg').textContent=avg;
+  el.innerHTML=S.redacoes.map(r=>`<div class="entry"><div class="entry-head"><strong>${safe(r.theme)}</strong><small>${safe(r.date)} · ${r.total}/1000</small></div><p>C1:${r.comps[0]} C2:${r.comps[1]} C3:${r.comps[2]} C4:${r.comps[3]} C5:${r.comps[4]}${r.note?' — '+safe(r.note):''}</p></div>`).join('');
+}
+
+/* ---------- simulados ---------- */
+function saveSimulado(){
+  const name=document.getElementById('simName').value.trim();
+  const date=document.getElementById('simDate').value||new Date().toISOString().slice(0,10);
+  const vals={Ling:+document.getElementById('sLing').value||0,Hum:+document.getElementById('sHum').value||0,Nat:+document.getElementById('sNat').value||0,Mat:+document.getElementById('sMat').value||0};
+  if(!name){alert('Dê um nome ao simulado.');return;}
+  S.simulados.unshift({name,date,...vals});
+  ['simName','sLing','sHum','sNat','sMat'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('simStatus').textContent='Salvo.';
+  save();renderSimulados();
+}
+function renderSimulados(){
+  const el=document.getElementById('simList');
+  document.getElementById('simCount').textContent=S.simulados.length;
+  if(!S.simulados.length){el.innerHTML='<div class="status">Nenhum ainda.</div>';document.getElementById('simBars').innerHTML='';return;}
+  el.innerHTML=S.simulados.map(s=>`<div class="entry"><div class="entry-head"><strong>${safe(s.name)}</strong><small>${safe(s.date)}</small></div><p>L:${s.Ling} · H:${s.Hum} · N:${s.Nat} · M:${s.Mat}</p></div>`).join('');
+  const areas=[['Linguagens','Ling'],['Humanas','Hum'],['Natureza','Nat'],['Matemática','Mat']];
+  document.getElementById('simBars').innerHTML=areas.map(([label,key])=>{
+    const last=S.simulados[0][key];
+    return `<div class="bar-row"><span>${label}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.min(100,last/1000*100)}%"></div></div><span>${last}</span></div>`;
+  }).join('');
+}
+
+/* ---------- erros ---------- */
+function saveErro(){
+  const subj=document.getElementById('errSubject').value;
+  const topic=document.getElementById('errTopic').value.trim();
+  const note=document.getElementById('errNote').value.trim();
+  if(!topic||!note){alert('Preencha tópico e anotação.');return;}
+  S.erros.unshift({subj,topic,note,date:dateShort()});
+  document.getElementById('errTopic').value='';
+  document.getElementById('errNote').value='';
+  document.getElementById('errStatus').textContent='Salvo. Volte aqui antes da prova.';
+  save();renderErros();
+}
+function renderErros(){
+  const el=document.getElementById('errList');
+  document.getElementById('errCount').textContent=S.erros.length;
+  if(!S.erros.length){el.innerHTML='<div class="status">Nenhum erro registrado.</div>';return;}
+  el.innerHTML=S.erros.map(e=>`<div class="entry"><div class="entry-head"><strong>${safe(e.subj)} · ${safe(e.topic)}</strong><small>${safe(e.date)}</small></div><p>${safe(e.note)}</p></div>`).join('');
+}
+
+/* ---------- plano ---------- */
+const DIAS=['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+function renderPlan(){
+  const el=document.getElementById('planFields');
+  el.innerHTML=DIAS.map(d=>`<div class="field"><label>${d}</label><input data-dia="${d}" value="${safe(S.plan[d]||'')}" placeholder="Ex.: 1 redação + 30 questões de mat."></div>`).join('');
+  const now=new Date();
+  document.getElementById('weekLabel').textContent='semana de '+now.toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
+}
+function savePlan(){
+  S.plan={};
+  document.querySelectorAll('#planFields input').forEach(i=>{if(i.value.trim())S.plan[i.dataset.dia]=i.value.trim();});
+  document.getElementById('planStatus').textContent='Plano salvo.';
+  save();
+}
+
+/* ---------- obs ---------- */
+function saveObs(){
+  const t=document.getElementById('obsText').value.trim();
+  if(!t)return;
+  S.obs.unshift({text:t,date:dateShort()});
+  document.getElementById('obsText').value='';
+  document.getElementById('obsStatus').textContent='Anotada.';
+  save();renderObs();
+}
+function renderObs(){
+  const el=document.getElementById('obsList');
+  document.getElementById('obsCount').textContent=S.obs.length;
+  if(!S.obs.length){el.innerHTML='<div class="status">Nenhuma observação ainda.</div>';return;}
+  el.innerHTML=S.obs.map(o=>`<div class="obs"><b>${safe(o.date)}</b>${safe(o.text)}</div>`).join('');
+}
+
+/* ---------- week summary ---------- */
+function renderWeek(){
+  const dots=document.getElementById('weekDots');
+  const bars=document.getElementById('weekBars');
+  const today=new Date();
+  let html='',onCount=0;
+  const subjects=['Linguagens','Humanas','Natureza','Matemática','Redação','Revisão','Outro'];
+  for(let i=6;i>=0;i--){
+    const d=new Date(today);d.setDate(d.getDate()-i);
+    const iso=d.toISOString().slice(0,10);
+    const has=S.entries.some(e=>e.iso&&e.iso.slice(0,10)===iso);
+    if(has)onCount++;
+    html+=`<div class="dot ${has?'on':''}" title="${d.toLocaleDateString('pt-BR')}">${d.getDate()}</div>`;
+  }
+  dots.innerHTML=html;
+  document.getElementById('weekSummary').textContent=onCount+'/7 dias com registro';
+  const maxMin=Math.max(60,...Object.values(S.focusBySubject||{}),1);
+  bars.innerHTML=subjects.filter(s=>S.focusBySubject[s]).map(s=>{
+    const v=S.focusBySubject[s]||0;
+    return `<div class="bar-row"><span>${s}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.min(100,v/maxMin*100)}%"></div></div><span>${v}min</span></div>`;
+  }).join('')||'<div class="status">Registre sessões de foco para ver onde seu tempo está indo.</div>';
+}
+
+/* ---------- entries ---------- */
+function renderEntries(){
+  const el=document.getElementById('entries');
+  document.getElementById('entryCount').textContent=S.entries.length+' relato(s)';
+  if(!S.entries.length){el.innerHTML='<div class="status">Quando você salvar um relato, ele aparece aqui.</div>';return;}
+  el.innerHTML=S.entries.map(e=>`<div class="entry"><div class="entry-head"><strong>Relato</strong><small>${safe(e.date)}</small></div><p>${safe(e.report)}</p></div>`).join('');
+}
+
+/* ---------- export ---------- */
+function exportJSON(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='raiz-backup.json';a.click();
+  document.getElementById('exportStatus').textContent='JSON baixado.';
+}
+function exportText(){
+  let t='RAIZ — resumo\n\n';
+  t+='Pontos: '+S.points+'\nStreak: '+S.streak+'\nMinutos focados: '+S.totalFocusMinutes+'\n\n';
+  t+='--- Diário ---\n'+S.entries.map(e=>`[${e.date}] ${e.report}`).join('\n\n')+'\n\n';
+  t+='--- Redações ---\n'+S.redacoes.map(r=>`[${r.date}] ${r.theme} — ${r.total}/1000`).join('\n')+'\n\n';
+  t+='--- Simulados ---\n'+S.simulados.map(s=>`[${s.date}] ${s.name} — L:${s.Ling} H:${s.Hum} N:${s.Nat} M:${s.Mat}`).join('\n')+'\n\n';
+  t+='--- Erros ---\n'+S.erros.map(e=>`[${e.date}] ${e.subj} · ${e.topic}: ${e.note}`).join('\n')+'\n\n';
+  t+='--- Observações ---\n'+S.obs.map(o=>`[${o.date}] ${o.text}`).join('\n');
+  const blob=new Blob([t],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='raiz-resumo.txt';a.click();
+  document.getElementById('exportStatus').textContent='Resumo baixado.';
+}
+function clearAll(){
+  if(!confirm('Isso apaga TUDO. Tem certeza?'))return;
+  if(!confirm('Última confirmação. Apagar mesmo?'))return;
+  resetAll();
+}
+
+/* ---------- render all ---------- */
+function renderAll(){
+  document.getElementById('points').textContent=S.points;
+  document.getElementById('streakNum').textContent=S.streak;
+  if(!document.getElementById('redDate').value)document.getElementById('redDate').value=new Date().toISOString().slice(0,10);
+  if(!document.getElementById('simDate').value)document.getElementById('simDate').value=new Date().toISOString().slice(0,10);
+  renderTimer();renderVillage();renderWeek();renderEntries();
+  renderRedacoes();renderSimulados();renderErros();renderObs();renderPlan();
+  renderCountdown();
+}
+renderAll();
+</script>
+</body></html>
